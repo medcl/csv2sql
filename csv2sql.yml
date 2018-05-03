@@ -1,0 +1,53 @@
+path.data: data
+path.logs: log
+
+api_bind: 0.0.0.0:2900
+
+modules:
+- name: api
+  enabled: true
+
+plugins:
+- name: csv2sql
+  enabled: true
+
+modules:
+- name: pipeline
+  enabled: true
+  runners:
+    - name: process_excel
+      enabled: true
+      input_queue: primary
+      max_go_routine: 1
+      threshold_in_ms: 0
+      timeout_in_ms: 5000
+      default_config:
+        start:
+          joint: read_csv
+          enabled: true
+          parameters:
+            sheet_name: 基础数据导入表
+            data_start_from_index: 4
+            column_name:
+              - outer_code
+              - common_name
+              - scientific_name
+              - english_name
+              - chinese_name
+              - region_name
+              - category_name
+              - is_homemade
+              - aquatic_region_id
+              - inner_code
+              - produce_pattern
+              - feed_pattern
+              - produce_pattern
+            row_format:
+              - INSERT INTO `aquatic_base_info` (`id`, `outer_code`, `common_name`, `scientific_name`, `english_name`, `chinese_name`, `region_name`, `aquatic_category_id`, `created_time`, `updated_time`)
+              - VALUES (<{base_info_id: }>, <{outer_code: }>, <{common_name: }>, <{scientific_name: }>, <{english_name: }>, <{chinese_name: }>, <{region_name: }>, <{aquatic_category_id: }>, <{created_time: }>, <{updated_time: }>);
+
+        process: []
+        error:
+          joint: on_error
+          enabled: true
+
