@@ -35,6 +35,8 @@ func (module CSV2SQLPlugin) Start(cfg *Config) {
 
 	//register pipeline joints
 	pipeline.RegisterPipeJoint(pipelines.LoggingJoint{})
+	pipeline.RegisterPipeJoint(pipelines.ReadCsvJoint{})
+	pipeline.RegisterPipeJoint(pipelines.ImportSQLJoint{})
 }
 
 func (module CSV2SQLPlugin) Stop() error {

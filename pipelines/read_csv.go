@@ -22,14 +22,19 @@ import (
 	log "github.com/cihub/seelog"
 	"github.com/infinitbyte/framework/core/pipeline"
 	"strings"
+	"github.com/infinitbyte/framework/core/util"
 )
 
+var fileName pipeline.ParaKey = "file_name"
 var rowFormat pipeline.ParaKey = "row_format"
 var sheetName pipeline.ParaKey = "sheet_name"
 var columnName pipeline.ParaKey = "column_name"
 var dataFromIndex pipeline.ParaKey = "data_start_from_index"
 
+var sqlKey pipeline.ParaKey = "sql"
+
 type ReadCsvJoint struct {
+	pipeline.Parameters
 }
 
 func (joint ReadCsvJoint) Name() string {
@@ -38,11 +43,12 @@ func (joint ReadCsvJoint) Name() string {
 
 func (joint ReadCsvJoint) Process(c *pipeline.Context) error {
 
+	log.Debug(joint.Data)
 	log.Debug(c.Data)
-	templates := c.MustGetStringArray(rowFormat)
+	templates := joint.MustGetStringArray(rowFormat)
 	log.Debug("row templates: ", templates)
 
-	xlsx, err := excelize.OpenFile("../test/Book1.xlsx")
+	xlsx, err := excelize.OpenFile(joint.MustGetString(fileName))
 	if err != nil {
 		log.Error(err)
 		return err
@@ -50,10 +56,12 @@ func (joint ReadCsvJoint) Process(c *pipeline.Context) error {
 	sheetMap := xlsx.GetSheetMap()
 	log.Debug("sheets: ", sheetMap)
 
-	colNames := c.MustGetStringArray(columnName)
-	dataOffset := c.MustGetInt(dataFromIndex)
+	colNames := joint.MustGetStringArray(columnName)
+	dataOffset := joint.MustGetInt(dataFromIndex)
 
-	rows := xlsx.GetRows(c.MustGetString(sheetName))
+	rows := xlsx.GetRows(joint.MustGetString(sheetName))
+
+	sql := ""
 	for offset, row := range rows {
 		if offset < dataOffset {
 			log.Debugf("%v < data offset: %v,　ignore", offset, dataOffset)
@@ -62,28 +70,45 @@ func (joint ReadCsvJoint) Process(c *pipeline.Context) error {
 
 		colMap := map[string]string{}
 
+		hit := false
 		for k, colCell := range row {
+			if colCell != "" {
+				hit = true
+			}
 			colName := colNames[k]
 			colMap[colName] = colCell
-			log.Debug("row:",offset, ": ", colName, "-", k, "-", colCell)
+			log.Trace("row:", offset, ": ", colName, "-", k, "-", colCell)
+		}
+
+		//ignore empty row
+		if !hit {
+			continue
 		}
 
 		for _, x := range templates {
-			line:=x
-			log.Debug("template:",line)
+			line := x
+			//line:=templates
+			log.Debug("template:", line)
 			for k, v := range colMap {
-				log.Debug(fmt.Sprintf("<{%v: }>",k),",", formatString(v))
+				log.Debug(fmt.Sprintf("<{%v: }>", k), ",", formatString(v))
 				line = strings.Replace(line, fmt.Sprintf("<{%v: }>", k), formatString(v), -1)
 			}
 			log.Debug(line)
+			sql = sql + line
+			log.Debug("sql:",sql)
 		}
 	}
+
+	c.Set(sqlKey, sql)
+
+	log.Info(sql)
 
 	return nil
 }
 
 func formatString(str string) string {
 	str = strings.Replace(str, "\"", "", -1)
-	str=fmt.Sprintf("'%s'",str)
+	str = strings.Replace(str, "'", "", -1)
+	str = fmt.Sprintf("'%s'", util.TrimSpaces(str))
 	return str
 }

@@ -21,6 +21,8 @@ import (
 	"github.com/infinitbyte/framework"
 	"github.com/infinitbyte/framework/core/module"
 	orm "github.com/infinitbyte/framework/core/persist"
+	q "github.com/infinitbyte/framework/core/queue"
+	pipe "github.com/infinitbyte/framework/core/pipeline"
 	"github.com/infinitbyte/framework/core/util"
 	"github.com/infinitbyte/framework/modules/api"
 	"github.com/infinitbyte/framework/modules/filter"
@@ -71,6 +73,10 @@ func main() {
 		module.Start()
 
 		orm.RegisterSchema(&model.Request{})
+
+		//manual trigger a pipeline event
+		context := pipe.Context{}
+		q.Push("primary", util.ToJSONBytes(context))
 
 	})
 
