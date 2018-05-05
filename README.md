@@ -13,7 +13,7 @@ Pipeline:
 
 Assume the file is dropped into `test/import.xlsx`, you can download it from [here](https://github.com/medcl/ifish-data-loader/blob/master/test/import.xlsx)
 
-<img width="800"  src="https://raw.githubusercontent.com/medcl/ifish-data-loader/master/docs/assets/img/Snip20180505_8.png">
+<img width="800"  src="https://github.com/medcl/ifish-data-loader/raw/master/doc/assets/img/Snip20180505_8.png">
 
 2. Config the `csv2sql.yml`
 
@@ -122,8 +122,8 @@ Note, please also change MySQL connection in joint `mysql_conn` config, ie: `you
 
 4. Now, check out the database, you will see 2 new records in two different table
 
-<img width="800"  src="https://raw.githubusercontent.com/medcl/ifish-data-loader/master/docs/assets/img/Snip20180505_5.png">
-<img width="800"  src="https://raw.githubusercontent.com/medcl/ifish-data-loader/master/docs/assets/img/Snip20180505_6.png">
+<img width="800"  src="https://github.com/medcl/ifish-data-loader/raw/master/doc/assets/img/Snip20180505_5.png">
+<img width="800"  src="https://github.com/medcl/ifish-data-loader/raw/master/doc/assets/img/Snip20180505_6.png">
 
 
 License
