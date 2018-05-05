@@ -110,12 +110,12 @@ And, the example is jus a example, you can use it to map any data sheet to any m
 3. Start to import the data
 ```
 ➜  csv2sql git:(master) ✗ ./bin/csv2sql
- _____  _______      _____   _____  ____  _
-/ ____|/ ____\ \    / /__ \ / ____|/ __ \| |
+  _____  _______      _____   _____  ____  _
+ / ____|/ ____\ \    / /__ \ / ____|/ __ \| |
 | |    | (___  \ \  / /   ) | (___ | |  | | |
 | |     \___ \  \ \/ /   / / \___ \| |  | | |
 | |____ ____) |  \  /   / /_ ____) | |__| | |____
-\_____|_____/    \/   |____|_____/ \___\_\______|
+ \_____|_____/    \/   |____|_____/ \___\_\______|
 [CSV2SQL] An util to convert csv data to SQL scripts.
 0.1.0_SNAPSHOT,  67026ee, Sat May 5 13:23:42 2018 +0800, medcl, support import multi datasheet
 
