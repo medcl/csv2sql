@@ -88,7 +88,6 @@ func (joint ReadCsvJoint) Process(c *pipeline.Context) error {
 
 		for _, x := range templates {
 			line := x
-			//line:=templates
 			log.Debug("template:", line)
 			for k, v := range colMap {
 				log.Debug(fmt.Sprintf("<{%v: }>", k), ",", formatString(v))

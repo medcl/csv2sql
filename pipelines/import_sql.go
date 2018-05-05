@@ -21,7 +21,6 @@ import (
 	log "github.com/cihub/seelog"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/infinitbyte/framework/core/pipeline"
-	"github.com/infinitbyte/framework/core/util"
 )
 
 type ImportSQLJoint struct {
@@ -71,7 +70,9 @@ func (joint ImportSQLJoint) Process(c *pipeline.Context) error {
 		panic(err)
 	}
 
-	log.Debug(result)
+	rc,_:=result.RowsAffected()
+	l,_:=result.RowsAffected()
+	log.Debugf("%v rows affected, lastInsertID: %v",rc,l)
 
 	err = tx.Commit()
 	if err != nil {
