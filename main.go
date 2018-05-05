@@ -20,9 +20,8 @@ import (
 	_ "expvar"
 	"github.com/infinitbyte/framework"
 	"github.com/infinitbyte/framework/core/module"
-	orm "github.com/infinitbyte/framework/core/persist"
-	q "github.com/infinitbyte/framework/core/queue"
 	pipe "github.com/infinitbyte/framework/core/pipeline"
+	q "github.com/infinitbyte/framework/core/queue"
 	"github.com/infinitbyte/framework/core/util"
 	"github.com/infinitbyte/framework/modules/api"
 	"github.com/infinitbyte/framework/modules/filter"
@@ -34,7 +33,6 @@ import (
 	"github.com/infinitbyte/framework/modules/ui"
 	"github.com/medcl/csv2sql/config"
 	"github.com/medcl/csv2sql/plugin"
-	"github.com/medcl/csv2sql/model"
 )
 
 func main() {
@@ -71,8 +69,6 @@ func main() {
 
 		//start modules
 		module.Start()
-
-		orm.RegisterSchema(&model.Request{})
 
 		//manual trigger a pipeline event
 		context := pipe.Context{}

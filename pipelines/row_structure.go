@@ -13,6 +13,5 @@ func (joint RowStructureJoint) Name() string {
 
 func (joint RowStructureJoint) Process(c *pipeline.Context) error {
 
-
 	return nil
 }

@@ -17,12 +17,13 @@ limitations under the License.
 package pipelines
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
 	log "github.com/cihub/seelog"
 	"github.com/infinitbyte/framework/core/pipeline"
-	"strings"
 	"github.com/infinitbyte/framework/core/util"
+	"strings"
 )
 
 var fileName pipeline.ParaKey = "file_name"
@@ -61,7 +62,7 @@ func (joint ReadCsvJoint) Process(c *pipeline.Context) error {
 
 	rows := xlsx.GetRows(joint.MustGetString(sheetName))
 
-	sql := ""
+	var sqlBuffer bytes.Buffer
 	for offset, row := range rows {
 		if offset < dataOffset {
 			log.Debugf("%v < data offset: %v,　ignore", offset, dataOffset)
@@ -94,14 +95,13 @@ func (joint ReadCsvJoint) Process(c *pipeline.Context) error {
 				line = strings.Replace(line, fmt.Sprintf("<{%v: }>", k), formatString(v), -1)
 			}
 			log.Debug(line)
-			sql = sql + line
-			log.Debug("sql:",sql)
+			sqlBuffer.WriteString(line)
 		}
 	}
 
-	c.Set(sqlKey, sql)
+	c.Set(sqlKey, sqlBuffer.String())
 
-	log.Info(sql)
+	log.Trace(sqlBuffer.String())
 
 	return nil
 }

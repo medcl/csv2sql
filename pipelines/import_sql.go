@@ -16,11 +16,11 @@ limitations under the License.
 
 package pipelines
 
-
 import (
-	"github.com/infinitbyte/framework/core/pipeline"
-	"github.com/infinitbyte/framework/core/persist"
+	"database/sql"
 	log "github.com/cihub/seelog"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/infinitbyte/framework/core/pipeline"
 	"github.com/infinitbyte/framework/core/util"
 )
 
@@ -28,20 +28,54 @@ type ImportSQLJoint struct {
 	pipeline.Parameters
 }
 
+const mysqlConn = "mysql_conn"
+
 func (joint ImportSQLJoint) Name() string {
 	return "import_sql"
 }
 
 func (joint ImportSQLJoint) Process(c *pipeline.Context) error {
 
-	sql:=c.MustGetString(sqlKey)
+	sqlText := c.MustGetString(sqlKey)
 
-	log.Info("start execute:",sql)
+	log.Debug("start execute: ", sqlText)
 
-	util.FileAppendNewLine("executed_sql",sql)
+	db, err := sql.Open("mysql", joint.MustGetString(mysqlConn))
+	if err != nil {
+		log.Error(err)
+		panic(err)
+	}
 
-	err:=persist.RawQuery(sql)
-	if(err!=nil){
+	tx, err := db.Begin()
+	if err != nil {
+		log.Error(err)
+		panic(err)
+	}
+
+	defer func() {
+		if r := recover(); r != nil {
+			log.Info("the database is rolled back.")
+			err = tx.Rollback()
+			if err != nil {
+				log.Error(err)
+				panic(err)
+			}
+		}
+	}()
+
+	//插入数据
+	result, err := tx.Exec(sqlText)
+
+	if err != nil {
+		log.Error(err, result)
+		panic(err)
+	}
+
+	log.Debug(result)
+
+	err = tx.Commit()
+	if err != nil {
+		log.Error(err)
 		panic(err)
 	}
 

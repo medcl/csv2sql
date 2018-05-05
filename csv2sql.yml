@@ -11,13 +11,6 @@ plugins:
 - name: csv2sql
   enabled: true
 
-- name: persist
-  enabled: true
-  driver: mysql
-  mysql:
-    connection: root:qeephp@tcp(localhost:3306)/ifish?charset=utf8&parseTime=true&loc=Local
-
-
 modules:
 - name: pipeline
   enabled: true
@@ -53,11 +46,16 @@ modules:
             - feed_pattern
             - produce_pattern
             row_format:
-            - 'INSERT INTO `aquatic_base_info` (`id`, `outer_code`, `common_name`, `scientific_name`, `english_name`, `chinese_name`, `region_name`, `aquatic_category_id`)'
+            - 'INSERT INTO `ifish`.`aquatic_base_info` (`id`, `outer_code`, `common_name`, `scientific_name`, `english_name`, `chinese_name`, `region_name`, `aquatic_category_id`)'
             - 'VALUES (<{id: }>, <{outer_code: }>, <{common_name: }>, <{scientific_name: }>, <{english_name: }>, <{chinese_name: }>, <{region_name: }>, <{aquatic_category_id: }>);'
 
         process:
         - joint: import_sql
+          enabled: true
+          parameters:
+            mysql_conn: root:qeephp@tcp(localhost:3306)/ifish?charset=utf8
+
+        - joint: logging
           enabled: true
 
         error:

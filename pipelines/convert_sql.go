@@ -16,7 +16,6 @@ limitations under the License.
 
 package pipelines
 
-
 import (
 	"github.com/infinitbyte/framework/core/pipeline"
 )
@@ -29,7 +28,6 @@ func (joint ConvertSQLJoint) Name() string {
 }
 
 func (joint ConvertSQLJoint) Process(c *pipeline.Context) error {
-
 
 	return nil
 }

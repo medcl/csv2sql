@@ -17,12 +17,12 @@ limitations under the License.
 package pipelines
 
 import (
-	"testing"
-	"github.com/infinitbyte/framework/core/pipeline"
 	"fmt"
 	"github.com/360EntSecGroup-Skylar/excelize"
-	"github.com/infinitbyte/framework/core/global"
 	"github.com/infinitbyte/framework/core/env"
+	"github.com/infinitbyte/framework/core/global"
+	"github.com/infinitbyte/framework/core/pipeline"
+	"testing"
 )
 
 func TestExcelize(t *testing.T) {
@@ -58,14 +58,14 @@ func TestExcelize(t *testing.T) {
 	}
 }
 func TestSeek(t *testing.T) {
-	e:=env.EmptyEnv()
+	e := env.EmptyEnv()
 	global.RegisterEnv(e)
-	e.IsDebug=true
-	joint:=ReadCsvJoint{}
-	c:=pipeline.Context{}
-	c.Set(rowFormat,[]string{"insert into mytable(a,b,c) values(<{colA: }>,<{colB: }>,<{colC: }>);"})
-	c.Set(sheetName,"Sheet1")
-	c.Set(dataFromIndex,2)
-	c.Set(columnName,[]string{"colA","colB","colC","colD","colE"})
+	e.IsDebug = true
+	joint := ReadCsvJoint{}
+	c := pipeline.Context{}
+	c.Set(rowFormat, []string{"insert into mytable(a,b,c) values(<{colA: }>,<{colB: }>,<{colC: }>);"})
+	c.Set(sheetName, "Sheet1")
+	c.Set(dataFromIndex, 2)
+	c.Set(columnName, []string{"colA", "colB", "colC", "colD", "colE"})
 	joint.Process(&c)
 }
