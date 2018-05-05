@@ -116,8 +116,12 @@ func (joint ConvertSQLJoint) Process(c *pipeline.Context) error {
 }
 
 func formatString(str string) string {
+	str = util.TrimSpaces(str)
+	if str == "" {
+		return "NULL"
+	}
 	str = strings.Replace(str, "\"", "", -1)
 	str = strings.Replace(str, "'", "", -1)
-	str = fmt.Sprintf("'%s'", util.TrimSpaces(str))
+	str = fmt.Sprintf("'%s'", str)
 	return str
 }

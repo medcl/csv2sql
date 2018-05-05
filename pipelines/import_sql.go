@@ -21,6 +21,8 @@ import (
 	log "github.com/cihub/seelog"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/infinitbyte/framework/core/pipeline"
+	"github.com/infinitbyte/framework/core/util"
+	"strings"
 )
 
 type ImportSQLJoint struct {
@@ -28,6 +30,7 @@ type ImportSQLJoint struct {
 }
 
 const mysqlConn = "mysql_conn"
+const enableRollback = "rollback_enabled"
 
 func (joint ImportSQLJoint) Name() string {
 	return "import_sql"
@@ -52,35 +55,46 @@ func (joint ImportSQLJoint) Process(c *pipeline.Context) error {
 			panic(err)
 		}
 
-		defer func() {
-			if r := recover(); r != nil {
-				log.Info("the database is rolled back.")
-				err = tx.Rollback()
-				if err != nil {
-					log.Error(err)
-					panic(err)
+		if(c.GetBool(enableRollback,true)){
+			defer func() {
+				if r := recover(); r != nil {
+					log.Info("the database is rolled back.")
+					err = tx.Rollback()
+					if err != nil {
+						log.Error(err)
+						panic(err)
+					}
 				}
-			}
-		}()
-
-		//插入数据
-		result, err := tx.Exec(sqlText.(string))
-
-		if err != nil {
-			log.Error(err, result)
-			panic(err)
+			}()
 		}
 
-		rc, _ := result.RowsAffected()
-		l, _ := result.RowsAffected()
+		//插入数据
+		sql := sqlText.(string)
+
+		array := strings.Split(sql, ";")
+		for _, v := range array {
+			if v == "" {
+				continue
+			}
+			result, err := tx.Exec(v)
+
+			if err != nil {
+				log.Error(err, result,v)
+				util.FileAppendNewLine("log/executed_sql_error.log", sql)
+				util.FileAppendNewLine("log/executed_sql_error.log", err.Error())
+				panic(err)
+			}
+
+			rc, _ := result.RowsAffected()
+			l, _ := result.RowsAffected()
+			log.Infof("sql execute success, %v rows affected, lastInsertID: %v", rc, l)
+		}
 
 		err = tx.Commit()
 		if err != nil {
 			log.Error(err)
 			panic(err)
 		}
-
-		log.Infof("sql execute success, %v rows affected, lastInsertID: %v", rc, l)
 
 	}
 
