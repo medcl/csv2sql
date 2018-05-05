@@ -1,5 +1,5 @@
 
-CSV2SQL, An util to convert csv data to SQL scripts.
+CSV2SQL, An util to convert csv data to SQL scripts and load to MySQL.
 
 ## How it works
 
