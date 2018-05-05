@@ -105,6 +105,8 @@ Note, once you change the column in data sheet, you must keep the `column_name` 
 
 Note, please also change MySQL connection in joint `mysql_conn` config, ie: `your_mysql_user:you_password@tcp(your_mysql_host:3306)/your_mysql_db?charset=utf8`
 
+And, the example is jus a example, you can use it to map any data sheet to any mysql table, update the config and import the data.
+
 3. Start to import the data
 ```
 ➜  csv2sql git:(master) ✗ ./bin/csv2sql
