@@ -70,9 +70,9 @@ func (joint ImportSQLJoint) Process(c *pipeline.Context) error {
 		panic(err)
 	}
 
-	rc,_:=result.RowsAffected()
-	l,_:=result.RowsAffected()
-	log.Debugf("%v rows affected, lastInsertID: %v",rc,l)
+	rc, _ := result.RowsAffected()
+	l, _ := result.RowsAffected()
+	log.Debugf("%v rows affected, lastInsertID: %v", rc, l)
 
 	err = tx.Commit()
 	if err != nil {
