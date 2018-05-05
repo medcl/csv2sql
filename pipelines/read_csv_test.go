@@ -63,9 +63,9 @@ func TestSeek(t *testing.T) {
 	e.IsDebug = true
 	joint := ReadCsvJoint{}
 	c := pipeline.Context{}
-	c.Set(rowFormat, []string{"insert into mytable(a,b,c) values(<{colA: }>,<{colB: }>,<{colC: }>);"})
-	c.Set(sheetName, "Sheet1")
-	c.Set(dataFromIndex, 2)
-	c.Set(columnName, []string{"colA", "colB", "colC", "colD", "colE"})
+	c.Set(rowFormatKey, []string{"insert into mytable(a,b,c) values(<{colA: }>,<{colB: }>,<{colC: }>);"})
+	c.Set(sheetNameKey, "Sheet1")
+	c.Set(dataFromIndexKey, 2)
+	c.Set(columnNameKey, []string{"colA", "colB", "colC", "colD", "colE"})
 	joint.Process(&c)
 }

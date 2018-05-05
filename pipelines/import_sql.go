@@ -35,52 +35,54 @@ func (joint ImportSQLJoint) Name() string {
 
 func (joint ImportSQLJoint) Process(c *pipeline.Context) error {
 
-	sqlText := c.MustGetString(sqlKey)
+	sqlTextMap := c.MustGetMap(sqlKey)
 
-	log.Debug("start execute: ", sqlText)
+	for k, sqlText := range sqlTextMap {
 
-	db, err := sql.Open("mysql", joint.MustGetString(mysqlConn))
-	if err != nil {
-		log.Error(err)
-		panic(err)
-	}
-
-	tx, err := db.Begin()
-	if err != nil {
-		log.Error(err)
-		panic(err)
-	}
-
-	defer func() {
-		if r := recover(); r != nil {
-			log.Info("the database is rolled back.")
-			err = tx.Rollback()
-			if err != nil {
-				log.Error(err)
-				panic(err)
-			}
+		log.Debug("start execute: ", k, ",sql: ", sqlText)
+		db, err := sql.Open("mysql", joint.MustGetString(mysqlConn))
+		if err != nil {
+			log.Error(err)
+			panic(err)
 		}
-	}()
 
-	//插入数据
-	result, err := tx.Exec(sqlText)
+		tx, err := db.Begin()
+		if err != nil {
+			log.Error(err)
+			panic(err)
+		}
 
-	if err != nil {
-		log.Error(err, result)
-		panic(err)
+		defer func() {
+			if r := recover(); r != nil {
+				log.Info("the database is rolled back.")
+				err = tx.Rollback()
+				if err != nil {
+					log.Error(err)
+					panic(err)
+				}
+			}
+		}()
+
+		//插入数据
+		result, err := tx.Exec(sqlText.(string))
+
+		if err != nil {
+			log.Error(err, result)
+			panic(err)
+		}
+
+		rc, _ := result.RowsAffected()
+		l, _ := result.RowsAffected()
+
+		err = tx.Commit()
+		if err != nil {
+			log.Error(err)
+			panic(err)
+		}
+
+		log.Infof("sql execute success, %v rows affected, lastInsertID: %v", rc, l)
+
 	}
-
-	rc, _ := result.RowsAffected()
-	l, _ := result.RowsAffected()
-	log.Debugf("%v rows affected, lastInsertID: %v", rc, l)
-
-	err = tx.Commit()
-	if err != nil {
-		log.Error(err)
-		panic(err)
-	}
-
-	log.Info("sql execute success")
 
 	return nil
 }

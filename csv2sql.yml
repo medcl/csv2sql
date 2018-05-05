@@ -53,6 +53,18 @@ modules:
             - 'INSERT INTO `ifish`.`aquatic_base_info` (`id`, `outer_code`, `common_name`, `scientific_name`, `english_name`, `chinese_name`, `region_name`, `aquatic_category_id`)'
             - 'VALUES (<{id: }>, <{outer_code: }>, <{common_name: }>, <{scientific_name: }>, <{english_name: }>, <{chinese_name: }>, <{region_name: }>, <{aquatic_category_id: }>);'
 
+        - joint: convert_sql
+          enabled: true
+          parameters:
+            sheet_name: aquatic_region
+            data_start_from_index: 1
+            column_name:
+            - id
+            - code
+            - name
+            - is_homemade
+            row_format:
+            - 'INSERT INTO `aquatic_region` (`id`, `code`, `name`, `is_homemade`) VALUES (<{id: }>, <{code: }>, <{name: }>, <{is_homemade: }>);'
 
         - joint: import_sql
           enabled: true

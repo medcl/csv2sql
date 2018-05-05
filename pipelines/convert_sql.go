@@ -22,8 +22,8 @@ import (
 	"github.com/360EntSecGroup-Skylar/excelize"
 	log "github.com/cihub/seelog"
 	"github.com/infinitbyte/framework/core/pipeline"
-	"strings"
 	"github.com/infinitbyte/framework/core/util"
+	"strings"
 )
 
 type ConvertSQLJoint struct {
@@ -36,10 +36,10 @@ func (joint ConvertSQLJoint) Name() string {
 
 const excelBytesKey = "excelBytes"
 
-var rowFormat pipeline.ParaKey = "row_format"
-var sheetName pipeline.ParaKey = "sheet_name"
-var columnName pipeline.ParaKey = "column_name"
-var dataFromIndex pipeline.ParaKey = "data_start_from_index"
+var rowFormatKey pipeline.ParaKey = "row_format"
+var sheetNameKey pipeline.ParaKey = "sheet_name"
+var columnNameKey pipeline.ParaKey = "column_name"
+var dataFromIndexKey pipeline.ParaKey = "data_start_from_index"
 
 var sqlKey pipeline.ParaKey = "sql"
 
@@ -48,7 +48,7 @@ func (joint ConvertSQLJoint) Process(c *pipeline.Context) error {
 	excelBytes := c.MustGetBytes(excelBytesKey)
 	r := bytes.NewReader(excelBytes)
 
-	templates := joint.MustGetStringArray(rowFormat)
+	templates := joint.MustGetStringArray(rowFormatKey)
 	log.Debug("row templates: ", templates)
 
 	xlsx, err := excelize.OpenReader(r)
@@ -59,10 +59,12 @@ func (joint ConvertSQLJoint) Process(c *pipeline.Context) error {
 	sheetMap := xlsx.GetSheetMap()
 	log.Debug("sheets: ", sheetMap)
 
-	colNames := joint.MustGetStringArray(columnName)
-	dataOffset := joint.MustGetInt(dataFromIndex)
+	colNames := joint.MustGetStringArray(columnNameKey)
+	dataOffset := joint.MustGetInt(dataFromIndexKey)
 
-	rows := xlsx.GetRows(joint.MustGetString(sheetName))
+	sheetName := joint.MustGetString(sheetNameKey)
+
+	rows := xlsx.GetRows(sheetName)
 
 	var sqlBuffer bytes.Buffer
 	for offset, row := range rows {
@@ -100,12 +102,18 @@ func (joint ConvertSQLJoint) Process(c *pipeline.Context) error {
 		}
 	}
 
-	c.Set(sqlKey, sqlBuffer.String())
+	sqlMap, ok := c.GetMap(sqlKey)
+	if !ok {
+		sqlMap = map[string]interface{}{}
+	}
+
+	sqlText := sqlBuffer.String()
+	sqlMap[sheetName] = sqlText
+	c.Set(sqlKey, sqlMap)
 
 	log.Trace(sqlBuffer.String())
 	return nil
 }
-
 
 func formatString(str string) string {
 	str = strings.Replace(str, "\"", "", -1)

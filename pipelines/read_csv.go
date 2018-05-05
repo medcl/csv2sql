@@ -45,4 +45,3 @@ func (joint ReadCsvJoint) Process(c *pipeline.Context) error {
 
 	return nil
 }
-

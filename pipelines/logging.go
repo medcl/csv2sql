@@ -15,12 +15,16 @@ func (joint LoggingJoint) Name() string {
 
 func (joint LoggingJoint) Process(c *pipeline.Context) error {
 
-	sql := c.MustGetString(sqlKey)
+	sqlTextMap := c.MustGetMap(sqlKey)
 
 	util.FileAppendNewLine("log/executed_sql.log", "")
 	util.FileAppendNewLine("log/executed_sql.log", time.Now().String())
-	util.FileAppendNewLine("log/executed_sql.log", sql)
-	util.FileAppendNewLine("log/executed_sql.log", "")
+
+	for k, sqlText := range sqlTextMap {
+		util.FileAppendNewLine("log/executed_sql.log", "process data sheet: "+k)
+		util.FileAppendNewLine("log/executed_sql.log", sqlText.(string))
+		util.FileAppendNewLine("log/executed_sql.log", "")
+	}
 
 	return nil
 }
