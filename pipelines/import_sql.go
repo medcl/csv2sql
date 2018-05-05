@@ -55,7 +55,7 @@ func (joint ImportSQLJoint) Process(c *pipeline.Context) error {
 			panic(err)
 		}
 
-		if(c.GetBool(enableRollback,true)){
+		if c.GetBool(enableRollback, true) {
 			defer func() {
 				if r := recover(); r != nil {
 					log.Info("the database is rolled back.")
@@ -79,7 +79,7 @@ func (joint ImportSQLJoint) Process(c *pipeline.Context) error {
 			result, err := tx.Exec(v)
 
 			if err != nil {
-				log.Error(err, result,v)
+				log.Error(err, result, v)
 				util.FileAppendNewLine("log/executed_sql_error.log", sql)
 				util.FileAppendNewLine("log/executed_sql_error.log", err.Error())
 				panic(err)

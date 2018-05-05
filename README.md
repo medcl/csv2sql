@@ -94,7 +94,7 @@ in this example the second `convert_sql` joint has been disabled, you can enable
 
 And also as you can see, in the first `convert_sql` joint, with the data sheet `fish_information`, the config `row_format` is a array,
 and have more than one SQL template, separated with `;` , which means you can generate multi SQL from one single data sheet,
-map one data row to multi mysql table, and then we can inset the data into different mysql tables.
+map one data row to multi mysql data records, and then we can inset the data into different mysql tables.
 
 The config `row_format` is a SQL template, and the config `column_name` is how your data sheet will be used in your template,
 like this template variable `<{is_homemade: }>`, it will looking for the data from column `is_homemade` which we have already configured in section `column_name`,
@@ -110,6 +110,12 @@ And, the example is jus a example, you can use it to map any data sheet to any m
 3. Start to import the data
 ```
 ➜  csv2sql git:(master) ✗ ./bin/csv2sql
+ _____  _______      _____   _____  ____  _
+/ ____|/ ____\ \    / /__ \ / ____|/ __ \| |
+| |    | (___  \ \  / /   ) | (___ | |  | | |
+| |     \___ \  \ \/ /   / / \___ \| |  | | |
+| |____ ____) |  \  /   / /_ ____) | |__| | |____
+\_____|_____/    \/   |____|_____/ \___\_\______|
 [CSV2SQL] An util to convert csv data to SQL scripts.
 0.1.0_SNAPSHOT,  67026ee, Sat May 5 13:23:42 2018 +0800, medcl, support import multi datasheet
 
@@ -138,4 +144,7 @@ And, the example is jus a example, you can use it to map any data sheet to any m
 License
 =======
 Released under the [Apache License, Version 2.0](https://github.com/medcl/csv2sql/blob/master/LICENSE) .
+
+Powered by [https://github.com/infinitbyte/framework](https://github.com/infinitbyte/framework)
+
 

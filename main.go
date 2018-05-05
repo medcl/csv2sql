@@ -37,7 +37,12 @@ import (
 
 func main() {
 
-	terminalHeader := ("")
+	terminalHeader := (" _____  _______      _____   _____  ____  _\n")
+	terminalHeader += ("/ ____|/ ____\\ \\    / /__ \\ / ____|/ __ \\| |\n")
+	terminalHeader += ("| |    | (___  \\ \\  / /   ) | (___ | |  | | |\n")
+	terminalHeader += ("| |     \\___ \\  \\ \\/ /   / / \\___ \\| |  | | |\n")
+	terminalHeader += ("| |____ ____) |  \\  /   / /_ ____) | |__| | |____\n")
+	terminalHeader += ("\\_____|_____/    \\/   |____|_____/ \\___\\_\\______|\n")
 
 	terminalFooter := ("                         |    |                \n")
 	terminalFooter += ("   _` |   _ \\   _ \\   _` |     _ \\  |  |   -_) \n")
