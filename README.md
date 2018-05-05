@@ -93,8 +93,14 @@ Note, there are more than one joint config with name: `convert_sql`, which means
 in this example the second `convert_sql` joint has been disabled, you can enable it if you wish, and also you can add more `convert_sql` joints.
 
 And also as you can see, in the first `convert_sql` joint, with the data sheet `fish_information`, the config `row_format` is a array,
-and have more than one SQL template, separated with `;` ,which means you can generate multi SQL from one single data sheet,
-and then we can inset the data into different mysql tables.
+and have more than one SQL template, separated with `;` , which means you can generate multi SQL from one single data sheet,
+map one data row to multi mysql table, and then we can inset the data into different mysql tables.
+
+The config `row_format` is a SQL template, and the config `column_name` is how your data sheet will be used in your template,
+like this template variable `<{is_homemade: }>`, it will looking for the data from column `is_homemade` which we have already configured in section `column_name`,
+you can get the SQL template by using MySQLWorkBench quickly([select db]->[select table]->[Copy to Clipboard]->[Insert Statement])
+<img width="800"  src="https://github.com/medcl/csv2sql/raw/master/doc/assets/img/Snip20180505_9.png">
+Once you change the column in data sheet, you must keep the `column_name` updated.
 
 Note, please also change MySQL connection in joint `mysql_conn` config, ie: `your_mysql_user:you_password@tcp(your_mysql_host:3306)/your_mysql_db?charset=utf8`
 
