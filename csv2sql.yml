@@ -4,8 +4,10 @@ path.logs: log
 api_bind: 0.0.0.0:2900
 
 modules:
+- name: ui
+  enabled: false
 - name: api
-  enabled: true
+  enabled: false
 
 plugins:
 - name: csv2sql
