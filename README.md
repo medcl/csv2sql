@@ -100,7 +100,8 @@ The config `row_format` is a SQL template, and the config `column_name` is how y
 like this template variable `<{is_homemade: }>`, it will looking for the data from column `is_homemade` which we have already configured in section `column_name`,
 you can get the SQL template by using MySQLWorkBench quickly([select db]->[select table]->[Copy to Clipboard]->[Insert Statement])
 <img width="800"  src="https://github.com/medcl/csv2sql/raw/master/doc/assets/img/Snip20180505_9.png">
-Once you change the column in data sheet, you must keep the `column_name` updated.
+
+Note, once you change the column in data sheet, you must keep the `column_name` updated.
 
 Note, please also change MySQL connection in joint `mysql_conn` config, ie: `your_mysql_user:you_password@tcp(your_mysql_host:3306)/your_mysql_db?charset=utf8`
 
