@@ -25,7 +25,6 @@ import (
 	"github.com/infinitbyte/framework/core/util"
 	"github.com/infinitbyte/framework/modules/api"
 	"github.com/infinitbyte/framework/modules/filter"
-	"github.com/infinitbyte/framework/modules/persist"
 	"github.com/infinitbyte/framework/modules/pipeline"
 	"github.com/infinitbyte/framework/modules/queue"
 	"github.com/infinitbyte/framework/modules/stats"
@@ -60,7 +59,6 @@ func main() {
 		module.New()
 
 		//load core modules first
-		module.Register(module.Database, persist.DatabaseModule{})
 		module.Register(module.Storage, storage.StorageModule{})
 		module.Register(module.Filter, filter.FilterModule{})
 		module.Register(module.Stats, stats.SimpleStatsModule{})
